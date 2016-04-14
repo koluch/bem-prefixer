@@ -19,58 +19,55 @@ const parseSelector = (selector) => {
     }
 }
 
-const buildBlockTag = (prefix, tag, mods = []) => {
+const buildBlockTag = (block, tag, mods) => {
     mods = mods === null ? [] : mods
-    const modClasses = mods.map((mod) => `${prefix}--${mod}`)
-    return [`${tag}.${prefix}`, ...modClasses].join(".")
+    const modClasses = mods.map((mod) => `${block}--${mod}`)
+    return [`${tag}.${block}`, ...modClasses].join(".")
 }
 
-const buildElementTag = (prefix, tag, el, mods) => {
+const buildElementTag = (block, tag, el, mods) => {
     mods = mods === null ? [] : mods
-    const modClasses = mods.map((mod) => `${prefix}__${el}--${mod}`)
-    return [`${tag}.${prefix}__${el}`, ...modClasses].join(".")
+    const modClasses = mods.map((mod) => `${block}__${el}--${mod}`)
+    return [`${tag}.${block}__${el}`, ...modClasses].join(".")
 }
 
-module.exports = (prefix) => (...args) => {
+module.exports = (block) => (...args) => {
     const selector = args[0]
     const parsedSelector = parseSelector(selector)
 
     if (parsedSelector.element === null && parsedSelector.modifiers === null) {
-        //todo: check arguments format
+        const tag = args[0]
         if (args.length === 1) {
-            return args[0] + "." + prefix
+            return buildBlockTag(block, tag, null)
         }
         else if (args.length === 2) {
-            const tag = args[0]
             if (Array.isArray(args[1])) {
                 const mods = args[1]
-                return buildBlockTag(prefix, tag, mods)
+                return buildBlockTag(block, tag, mods)
             }
             else {
                 const el = args[1]
-                return buildElementTag(prefix, tag, el, [])
+                return buildElementTag(block, tag, el, [])
             }
         }
         else if (args.length === 3) {
-            const tag = args[0]
             const el = args[1]
             const mods = args[2]
-
-            return buildElementTag(prefix, tag, el, mods)
+            return buildElementTag(block, tag, el, mods)
         }
         else {
-            throw new Error("Wrong arguments number (max 3 allowed)")
+            throw new Error("Wrong arguments number (minumum 1, maximum 3)")
         }
     }
     else {
         if (args.length > 1) {
-            throw new Error("It's impossible to combine complex selectors with arguments!") //todo: make better message?
+            throw new Error("It's impossible to combine inline selectors with arguments!")
         }
         if (parsedSelector.element) {
-            return buildElementTag(prefix, parsedSelector.tag, parsedSelector.element, parsedSelector.modifiers)
+            return buildElementTag(block, parsedSelector.tag, parsedSelector.element, parsedSelector.modifiers)
         }
         else {
-            return buildBlockTag(prefix, parsedSelector.tag, parsedSelector.modifiers)
+            return buildBlockTag(block, parsedSelector.tag, parsedSelector.modifiers)
         }
     }
 }
