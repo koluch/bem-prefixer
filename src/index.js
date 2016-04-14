@@ -31,7 +31,7 @@ const buildElementTag = (prefix, tag, el, mods) => {
     return [`${tag}.${prefix}__${el}`, ...modClasses].join(".")
 }
 
-export default (prefix) => (...args) => {
+module.exports = (prefix) => (...args) => {
     const selector = args[0]
     const parsedSelector = parseSelector(selector)
 
