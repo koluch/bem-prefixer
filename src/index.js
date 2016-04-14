@@ -7,7 +7,6 @@
  */
 
 const parseSelector = (selector) => {
-    //todo: check format
     const regexp = /^([^#\.]+)(?:#([^\.]+))?(?:\.(.+))?$/
     const match = selector.match(regexp)
     if (match === null) {
