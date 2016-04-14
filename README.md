@@ -54,6 +54,31 @@ console.log(bem("div", elementName)) // "div.Block__header"
 console.log(bem("div", elementName, modifiers)) // "div.Block__header.Block__header--highlighted"
 ```
 
+## Usage with hyperscript-like libraries
+
+It is very convinient to use this library together with hyperscript-like libraries (e.g [react-markup](https://github.com/koluch/react-markup) or [react-hyperscript](https://github.com/mlmorg/react-hyperscript)). `react-hyperscript` example:
+
+```javascript
+import h from 'react-hyperscript';
+import React from 'react';
+import prefixer from 'bem-prefixer'
+
+const bem = prefixer("Item")
+
+export default React.createClass({
+  render() {
+    const mods = this.props.selected ? ["selected"] : []
+  
+    return (
+      h(bem('div', mods), [    // expands to "div.Item.Item--selected"
+        h(bem('h1#heading'), 'This is hyperscript'),    // expands to "h1.Item__heading"
+        h(bem('div#body'), 'creating React.js markup'),  // expands to "div.Item__body"
+      ])
+    );
+  }
+});
+```
+
 ## License
 
 MIT
