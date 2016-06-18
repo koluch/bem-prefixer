@@ -9,7 +9,7 @@ Library for generation of BEM-style CSS selectors
 
 ## Usage
 
-This library could create BEM-style selectors from special selectors (wich is subset of CSS selectors): it interprets id part in selector as a block name and classes as modifiers. For example:
+This library could create BEM-style selectors from special kind of selectors (which look like CSS selectors): it interprets id part of selector as a block name and classes part as modifiers. For example:
 
 ```javascript
 import prefixer from 'bem-prefixer'
