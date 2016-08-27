@@ -19,37 +19,29 @@ const parseSelector = (selector) => {
     }
 }
 
-const buildBlockTag = (block, tag, mods) => {
-    if (typeof block !== "string") throw Error("Block should be a string, given: " + JSON.stringify(block))
-    if (typeof tag !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(tag))
-    if (mods === null) {
-        mods = []
+const buildClasses = (tag, block, el, mods) => {
+    if (typeof block !== "string") {
+        throw Error("Block should be a string, given: " + JSON.stringify(block))
     }
-    else if (typeof mods === "string") {
-        mods = [mods]
+    if (typeof tag !== "string") {
+        throw Error("Tag should be a string, given: " + JSON.stringify(tag))
     }
-    if (Object.prototype.toString.call(mods) !== "[object Array]") {
+    if (el !== null && typeof el !== "string") {
+        throw Error("Tag should be a string, given: " + JSON.stringify(el))
+    }
+    if (mods !== null
+        && typeof mods !== "string"
+        && Object.prototype.toString.call(mods) !== "[object Array]") {
         throw Error("Mods should be an array or string, given " + JSON.stringify(mods))
     }
-    const modClasses = mods.map((mod) => `${block}--${mod}`)
-    return [`${tag}.${block}`, ...modClasses].join(".")
-}
 
-const buildElementTag = (block, tag, el, mods) => {
-    if (typeof block !== "string") throw Error("Block should be a string, given: " + JSON.stringify(block))
-    if (typeof tag !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(tag))
-    if (typeof el !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(el))
-    if (mods === null) {
-        mods = []
-    }
-    else if (typeof mods === "string") {
-        mods = [mods]
-    }
-    else if (Object.prototype.toString.call(mods) !== "[object Array]") {
-        throw Error("Mods should be an array or string, given " + JSON.stringify(mods))
-    }
-    const modClasses = mods.map((mod) => `${block}__${el}--${mod}`)
-    return [`${tag}.${block}__${el}`, ...modClasses].join(".")
+    mods = (typeof mods === "string") ? [mods] : mods
+    mods = (mods === null) ? [] : mods
+
+    el = (el === null) ? "" : `__${el}`
+
+    const modClasses = mods.map((mod) => `${block}${el}--${mod}`)
+    return [`${tag}.${block}${el}`, ...modClasses].join(".")
 }
 
 
@@ -60,22 +52,22 @@ module.exports = (block) => (...args) => {
     if (parsedSelector.element === null && parsedSelector.modifiers === null) {
         const tag = args[0]
         if (args.length === 1) {
-            return buildBlockTag(block, tag, null)
+            return buildClasses(tag, block, null, null)
         }
         else if (args.length === 2) {
             if (Array.isArray(args[1])) {
                 const mods = args[1]
-                return buildBlockTag(block, tag, mods)
+                return buildClasses(tag, block, null, mods)
             }
             else {
                 const el = args[1]
-                return buildElementTag(block, tag, el, [])
+                return buildClasses(tag, block, el, [])
             }
         }
         else if (args.length === 3) {
             const el = args[1]
             const mods = args[2]
-            return buildElementTag(block, tag, el, mods)
+            return buildClasses(tag, block, el, mods)
         }
         else {
             throw new Error("Wrong arguments number (minumum 1, maximum 3)")
@@ -86,10 +78,10 @@ module.exports = (block) => (...args) => {
             throw new Error("It's impossible to combine inline selectors with arguments!")
         }
         if (parsedSelector.element) {
-            return buildElementTag(block, parsedSelector.tag, parsedSelector.element, parsedSelector.modifiers)
+            return buildClasses(parsedSelector.tag, block, parsedSelector.element, parsedSelector.modifiers)
         }
         else {
-            return buildBlockTag(block, parsedSelector.tag, parsedSelector.modifiers)
+            return buildClasses(parsedSelector.tag, block, null, parsedSelector.modifiers)
         }
     }
 }
