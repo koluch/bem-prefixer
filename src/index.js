@@ -20,16 +20,38 @@ const parseSelector = (selector) => {
 }
 
 const buildBlockTag = (block, tag, mods) => {
-    mods = mods === null ? [] : mods
+    if (typeof block !== "string") throw Error("Block should be a string, given: " + JSON.stringify(block))
+    if (typeof tag !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(tag))
+    if (mods === null) {
+        mods = []
+    }
+    else if (typeof mods === "string") {
+        mods = [mods]
+    }
+    if (Object.prototype.toString.call(mods) !== "[object Array]") {
+        throw Error("Mods should be an array or string, given " + JSON.stringify(mods))
+    }
     const modClasses = mods.map((mod) => `${block}--${mod}`)
     return [`${tag}.${block}`, ...modClasses].join(".")
 }
 
 const buildElementTag = (block, tag, el, mods) => {
-    mods = mods === null ? [] : mods
+    if (typeof block !== "string") throw Error("Block should be a string, given: " + JSON.stringify(block))
+    if (typeof tag !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(tag))
+    if (typeof el !== "string") throw Error("Tag should be a string, given: " + JSON.stringify(el))
+    if (mods === null) {
+        mods = []
+    }
+    else if (typeof mods === "string") {
+        mods = [mods]
+    }
+    else if (Object.prototype.toString.call(mods) !== "[object Array]") {
+        throw Error("Mods should be an array or string, given " + JSON.stringify(mods))
+    }
     const modClasses = mods.map((mod) => `${block}__${el}--${mod}`)
     return [`${tag}.${block}__${el}`, ...modClasses].join(".")
 }
+
 
 module.exports = (block) => (...args) => {
     const selector = args[0]

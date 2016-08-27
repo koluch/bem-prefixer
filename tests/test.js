@@ -38,6 +38,12 @@ test("three arguments should return element with modifiers", (t) => {
     t.end()
 })
 
+test("three arguments: third parameters could be a string", (t) => {
+    const bem = prefixer("BlockName")
+    t.equals(bem("div", "header", "selected"), "div.BlockName__header.BlockName__header--selected")
+    t.end()
+})
+
 test("inline: element without modifiers", (t) => {
     const bem = prefixer("BlockName")
     t.equals(bem("div#header"), "div.BlockName__header")

@@ -8,7 +8,7 @@
     "lint": "eslint src test",
     "lint-n-fix": "eslint --fix src test",
     "build": "babel src -d lib",
-    "test": "babel-tape-runner tests/**.js",
+    "test": "babel-tape-runner tests/**/*.js",
     "pretest": "npm run clean && npm run build",
     "prepublish": "npm run lint && npm run test"
   },

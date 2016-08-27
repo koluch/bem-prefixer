@@ -76,7 +76,7 @@
     "array-callback-return": "error",
     "block-scoped-var": "error",
     "complexity": "error",
-    "curly": "error",
+    "curly": ["error", "multi-line"],
     "dot-location": ["error", "property"],
     "guard-for-in": "error",
     "no-caller": "error",
