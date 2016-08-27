@@ -1,6 +1,6 @@
 {
   "name": "bem-prefixer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Library for generation of BEM-style CSS selectors",
   "main": "lib/index.js",
   "scripts": {
